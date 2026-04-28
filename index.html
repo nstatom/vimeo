@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Vimeo Playlist Player</title>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: black;
+    }
+    #player {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="player"></div>
+
+<script>
+  const videos = [
+    76979871,  // replace with your Vimeo IDs
+    22439234,
+    146022717
+  ];
+
+  let currentIndex = 0;
+
+  const player = new Vimeo.Player('player', {
+    id: videos[currentIndex],
+    autoplay: true,
+    muted: false
+  });
+
+  // Try fullscreen on first play (browser may require user interaction)
+  player.ready().then(() => {
+    player.requestFullscreen().catch(() => {});
+  });
+
+  // When video ends → load next
+  player.on('ended', () => {
+    currentIndex++;
+
+    if (currentIndex < videos.length) {
+      player.loadVideo(videos[currentIndex]).then(() => {
+        player.play();
+      });
+    } else {
+      console.log('Playlist finished');
+    }
+  });
+</script>
+
+</body>
+</html>
